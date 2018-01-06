@@ -1,6 +1,7 @@
 import * as ts from 'typescript';
 import * as _ts from '../ts-internal';
 import * as _ from 'lodash';
+import * as Path from 'path';
 
 import { Application } from '../application';
 import { ParameterType } from '../utils/options/declaration';
@@ -403,7 +404,11 @@ export class Converter extends ChildableComponent<Application, ConverterComponen
     private compile(context: Context): ReadonlyArray<ts.Diagnostic> {
         const program = context.program;
 
+        const appDirectory = this.compilerHost.currentDirectory;        
         program.getSourceFiles().forEach((sourceFile) => {
+            if(!Path.isAbsolute(sourceFile.fileName)) {
+              sourceFile.fileName = normalizePath(_ts.normalizeSlashes(Path.join(appDirectory, sourceFile.fileName)));
+            }
             this.convertNode(context, sourceFile);
         });
 
