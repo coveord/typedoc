@@ -293,6 +293,13 @@ export class Application extends ChildableComponent<Application, AbstractCompone
                 }
                 if (json.children != null && json.children.length > 0) {
                     let newPath = path + json.name;
+
+                    // when using relative path and entering a new module, 
+                    // the first child is an empty node where the name is the path.
+                    if (newPath.match('^".*"$') && json.comment == null) {
+                        newPath = '';
+                    }
+
                     if (newPath != '') {
                         newPath += '.';
                     }
