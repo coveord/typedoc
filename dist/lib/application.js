@@ -174,6 +174,9 @@ var Application = (function (_super) {
                 }
                 if (json.children != null && json.children.length > 0) {
                     var newPath_1 = path + json.name;
+                    if (newPath_1.match('^".*"$') && json.comment == null) {
+                        newPath_1 = '';
+                    }
                     if (newPath_1 != '') {
                         newPath_1 += '.';
                     }
