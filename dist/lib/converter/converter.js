@@ -19,6 +19,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ts = require("typescript");
 var _ts = require("../ts-internal");
 var _ = require("lodash");
+var Path = require("path");
 var declaration_1 = require("../utils/options/declaration");
 var context_1 = require("./context");
 var components_1 = require("./components");
@@ -190,7 +191,11 @@ var Converter = (function (_super) {
     Converter.prototype.compile = function (context) {
         var _this = this;
         var program = context.program;
+        var appDirectory = this.compilerHost.currentDirectory;
         program.getSourceFiles().forEach(function (sourceFile) {
+            if (!Path.isAbsolute(sourceFile.fileName)) {
+                sourceFile.fileName = fs_1.normalizePath(_ts.normalizeSlashes(Path.join(appDirectory, sourceFile.fileName)));
+            }
             _this.convertNode(context, sourceFile);
         });
         var diagnostics = program.getOptionsDiagnostics();

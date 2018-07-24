@@ -16,7 +16,7 @@ export class CompilerHost extends ConverterComponent implements ts.CompilerHost 
     /**
      * The full path of the current directory. Result cache of [[getCurrentDirectory]].
      */
-    private currentDirectory: string;
+    public currentDirectory: string;
 
     /**
      * Return an instance of ts.SourceFile representing the given file.

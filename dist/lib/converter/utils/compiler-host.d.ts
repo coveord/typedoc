@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import { ConverterComponent } from '../components';
 export declare class CompilerHost extends ConverterComponent implements ts.CompilerHost {
-    private currentDirectory;
+    currentDirectory: string;
     getSourceFile(filename: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void): ts.SourceFile;
     getDefaultLibFileName(options: ts.CompilerOptions): string;
     getDirectories(path: string): string[];

@@ -85,7 +85,7 @@ export class Converter extends ChildableComponent<Application, ConverterComponen
     })
     excludeProtected: boolean;
 
-    private compilerHost: CompilerHost;
+    public compilerHost: CompilerHost;
 
     private nodeConverters: {[syntaxKind: number]: ConverterNodeComponent<ts.Node>};
 

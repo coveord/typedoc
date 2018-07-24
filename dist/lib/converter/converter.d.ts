@@ -3,6 +3,7 @@ import { Application } from '../application';
 import { Reflection, Type, ProjectReflection } from '../models/index';
 import { Context } from './context';
 import { ConverterComponent } from './components';
+import { CompilerHost } from './utils/compiler-host';
 import { Component, ChildableComponent, ComponentClass } from '../utils/component';
 export interface ConverterResult {
     errors: ReadonlyArray<ts.Diagnostic>;
@@ -16,7 +17,7 @@ export declare class Converter extends ChildableComponent<Application, Converter
     excludeNotExported: boolean;
     excludePrivate: boolean;
     excludeProtected: boolean;
-    private compilerHost;
+    compilerHost: CompilerHost;
     private nodeConverters;
     private typeNodeConverters;
     private typeTypeConverters;
