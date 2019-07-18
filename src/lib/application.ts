@@ -338,7 +338,7 @@ export class Application extends ChildableComponent<Application, AbstractCompone
             values = copy;
         }
 
-        return values.slice(0, 4);
+        return values;
     }
 
     private getConstrainedValuesFromTypes(str: any) {
