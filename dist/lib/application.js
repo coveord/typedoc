@@ -188,23 +188,31 @@ var Application = (function (_super) {
         return nodeList;
     };
     Application.prototype.generateConstrainedValues = function (str) {
-        var constrainedValues = [];
-        if (str && str['type'] && str['type'].type == 'union') {
-            if (str.type.types[1] && str.type.types[1].elementType && str.type.types[1].elementType.types) {
-                constrainedValues = str.type.types[1].elementType.types.map(function (type) {
-                    return type.value;
-                });
-                if (str.type.types[0].type && str.type.types[0].type.toLowerCase() == 'array') {
-                    var copy = [];
-                    for (var i = 0; i < constrainedValues.length; i++) {
-                        copy[i] = constrainedValues.slice(0, i + 1).join(',');
-                    }
-                    constrainedValues = copy;
-                }
-                constrainedValues = constrainedValues.slice(0, 4);
-            }
+        if (!str || !str['type'] || !(str['type'].type == 'union')) {
+            return [];
         }
-        return constrainedValues;
+        if (str.type.types[1] && str.type.types[1].elementType && str.type.types[1].elementType.types) {
+            return this.getConstrainedValuesFromElementType(str);
+        }
+        if (str.type.types) {
+            return this.getConstrainedValuesFromTypes(str);
+        }
+        return [];
+    };
+    Application.prototype.getConstrainedValuesFromElementType = function (str) {
+        var values = str.type.types[1].elementType.types.map(function (type) { return type.value; });
+        if (str.type.types[0].type && str.type.types[0].type.toLowerCase() == 'array') {
+            var copy = [];
+            for (var i = 0; i < values.length; i++) {
+                copy[i] = values.slice(0, i + 1).join(',');
+            }
+            values = copy;
+        }
+        return values;
+    };
+    Application.prototype.getConstrainedValuesFromTypes = function (str) {
+        var valuesAsString = str.type.types.filter(function (type) { return type.value; }).map(function (type) { return type.value; }).join(',');
+        return valuesAsString ? [valuesAsString] : [];
     };
     Application.prototype.generateMiscAttributes = function (str) {
         var otherMiscAttributes = {};

@@ -30,6 +30,8 @@ export declare class Application extends ChildableComponent<Application, Abstrac
     generateJson(project: ProjectReflection, out: string): boolean;
     private prettifyJson(obj, project, linkPrefix?);
     private generateConstrainedValues(str);
+    private getConstrainedValuesFromElementType(str);
+    private getConstrainedValuesFromTypes(str);
     private generateMiscAttributes(str);
     expandInputFiles(inputFiles?: string[]): string[];
     toString(): string;
