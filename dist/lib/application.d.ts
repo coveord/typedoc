@@ -32,7 +32,6 @@ export declare class Application extends ChildableComponent<Application, Abstrac
     private generateConstrainedValues(str);
     private getConstrainedValuesFromElementType(str);
     private getConstrainedValuesFromTypes(str);
-    private generateMiscAttributes(str);
     expandInputFiles(inputFiles?: string[]): string[];
     toString(): string;
 }

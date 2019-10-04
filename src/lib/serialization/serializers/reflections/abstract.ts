@@ -23,6 +23,7 @@ export class ReflectionSerializer extends ReflectionSerializerComponent<Reflecti
       kind: reflection.kind,
       kindString: reflection.kindString,
       notSupportedIn: reflection.notSupportedIn,
+      coveoComponentOptionAttributes: reflection.coveoComponentOptionAttributes,
       examples: reflection.examples,
       flags: {}                      // TODO: remove if no flags
     });

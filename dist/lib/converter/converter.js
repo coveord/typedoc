@@ -27,8 +27,8 @@ var compiler_host_1 = require("./utils/compiler-host");
 var component_1 = require("../utils/component");
 var fs_1 = require("../utils/fs");
 var comment_1 = require("./factories/comment");
-var comments_1 = require("../models/comments");
 var __1 = require("../..");
+var coveoCustom_1 = require("../coveo/coveoCustom");
 var Converter = (function (_super) {
     __extends(Converter, _super);
     function Converter() {
@@ -132,32 +132,12 @@ var Converter = (function (_super) {
         }
         context.visitStack = oldVisitStack;
         var comment = comment_1.getRawComment(node);
-        if (result && comment != null && comment.indexOf('@notSupportedIn') != -1) {
-            var tagRegex = /@(?:notSupportedIn)\s*((?:[\w]+, )*[\w]+)/g;
-            result.comment = comment_1.parseComment(comment.replace(tagRegex, ''));
-            var tag = tagRegex.exec(comment);
-            if (!result.comment.tags) {
-                result.comment.tags = [];
-            }
-            var tagValue = tag[1];
-            var tagValueInfo = this.application.notSupportedFeaturesConfig[tagValue];
-            if (tagValueInfo) {
-                tagValue = "<a href=\"" + tagValueInfo.link + "\">" + tagValueInfo.name + "</a>";
-            }
-            result.comment.tags.push(new comments_1.CommentTag('not supported in', '', tagValue));
-            result.notSupportedIn = tag[1].split(/,\s?/);
-        }
-        if (result && comment != null && comment.indexOf('@examples') != -1) {
-            var examplesTagRegex = new RegExp(/@(?:examples)\s(.*)/);
-            result.comment = comment_1.parseComment(comment.replace(examplesTagRegex, ''));
-            var examplesTag = examplesTagRegex.exec(comment);
-            if (!examplesTag || !examplesTag[1]) {
-                return;
-            }
-            result.examples = examplesTag[1].split(/(?<!\\),/).map(function (s) { return s.trim().replace('\\,', ',').replace('\'', '&apos;'); });
-        }
-        if (result && comment != null && comment.indexOf('@componentOptions') != -1) {
-            result.setFlag(__1.ReflectionFlag.CoveoComponentOptions, true);
+        if (coveoCustom_1.CoveoCustom.areResultAndCommentDefined(result, comment)) {
+            coveoCustom_1.CoveoCustom.setNotSupportedInTag(this, result, comment);
+            coveoCustom_1.CoveoCustom.extractOptionCustomMarkupExamples(result, comment);
+            coveoCustom_1.CoveoCustom.setCoveoComponentOptionsFlag(result, comment);
+            coveoCustom_1.CoveoCustom.extractTagsFromComponentBuildOptionArgs(result);
+            coveoCustom_1.CoveoCustom.parseAdditionalCustomTags(result);
         }
         if (result && result instanceof __1.DeclarationReflection) {
             var declarationReflection = result;

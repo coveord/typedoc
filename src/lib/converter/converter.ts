@@ -11,9 +11,9 @@ import { ConverterComponent, ConverterNodeComponent, ConverterTypeComponent, Typ
 import { CompilerHost } from './utils/compiler-host';
 import { Component, Option, ChildableComponent, ComponentClass } from '../utils/component';
 import { normalizePath } from '../utils/fs';
-import { getRawComment, parseComment } from './factories/comment';
-import { CommentTag } from '../models/comments';
-import { ReflectionFlag, DeclarationReflection, ReflectionKind } from '../..';
+import { getRawComment } from './factories/comment';
+import { DeclarationReflection, ReflectionKind } from '../..';
+import { CoveoCustom } from '../coveo/coveoCustom';
 
 /**
  * Result structure of the [[Converter.convert]] method.
@@ -318,41 +318,12 @@ export class Converter extends ChildableComponent<Application, ConverterComponen
         context.visitStack = oldVisitStack;
         var comment = getRawComment(node);
 
-        if (result && comment != null && comment.indexOf('@notSupportedIn') != -1) {
-            var tagRegex = /@(?:notSupportedIn)\s*((?:[\w]+, )*[\w]+)/g;
-
-            result.comment = parseComment(comment.replace(tagRegex, ''));
-
-            var tag = tagRegex.exec(comment);
-
-            if (!result.comment.tags) {
-                result.comment.tags = [];
-            }
-
-            let tagValue = tag[1];
-            const tagValueInfo = this.application.notSupportedFeaturesConfig[tagValue];
-            if (tagValueInfo) {
-                tagValue = `<a href="${tagValueInfo.link}">${tagValueInfo.name}</a>`
-            }
-            result.comment.tags.push(new CommentTag('not supported in', '', tagValue));
-            result.notSupportedIn = tag[1].split(/,\s?/);
-        }
-
-        if (result && comment != null && comment.indexOf('@examples') != -1) {
-            const examplesTagRegex = new RegExp(/@(?:examples)\s(.*)/);
-
-            result.comment = parseComment(comment.replace(examplesTagRegex, ''));
-
-            const examplesTag = examplesTagRegex.exec(comment);
-            if (!examplesTag || !examplesTag[1]) {
-                return;
-            }
-
-            result.examples = examplesTag[1].split(/(?<!\\),/).map(s => s.trim().replace('\\,', ',').replace('\'', '&apos;'));
-        }
-
-        if (result && comment != null && comment.indexOf('@componentOptions') != -1) {
-            result.setFlag(ReflectionFlag.CoveoComponentOptions, true);
+        if (CoveoCustom.areResultAndCommentDefined(result, comment)) {
+            CoveoCustom.setNotSupportedInTag(this, result, comment);
+            CoveoCustom.extractOptionCustomMarkupExamples(result, comment);
+            CoveoCustom.setCoveoComponentOptionsFlag(result, comment);
+            CoveoCustom.extractTagsFromComponentBuildOptionArgs(result);
+            CoveoCustom.parseAdditionalCustomTags(result);
         }
 
         if (result && result instanceof DeclarationReflection) {
@@ -373,7 +344,6 @@ export class Converter extends ChildableComponent<Application, ConverterComponen
                 })
             }
         }
-
 
         return result;
     }

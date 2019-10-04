@@ -2,6 +2,7 @@ import { SourceReference } from '../sources/file';
 import { Type } from '../types/index';
 import { Comment } from '../comments/comment';
 import { TypeParameterReflection } from './type-parameter';
+import { IParsedCoveoBuildOptionArgs, CoveoCustomTag } from '../../coveo/coveoCustom';
 
 /**
  * Holds all data models used by TypeDoc.
@@ -298,6 +299,10 @@ export abstract class Reflection {
     notSupportedIn: string[];
 
     examples: string[];
+
+    coveoComponentOptionAttributes: IParsedCoveoBuildOptionArgs;
+    coveoAdditionalAttributes: CoveoCustomTag[];
+    defaultValue?: string;
 
     /**
      * Url safe alias for this reflection.

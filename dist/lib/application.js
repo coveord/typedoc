@@ -158,7 +158,13 @@ var Application = (function (_super) {
                     var markedText = marked(comment.shortText + (comment.text ? '\n' + comment.text : ''));
                     var type = '';
                     var constrainedValues = _this.generateConstrainedValues(json);
-                    var miscAttributes = _this.generateMiscAttributes(json);
+                    var miscAttributes = {};
+                    if (json.coveoComponentOptionAttributes) {
+                        for (var key in json.coveoComponentOptionAttributes) {
+                            var miscAttribute = json.coveoComponentOptionAttributes[key];
+                            miscAttributes[key] = miscAttribute.rawValue;
+                        }
+                    }
                     if (json.type && json.type.name) {
                         type = json.type.name;
                     }
@@ -213,24 +219,6 @@ var Application = (function (_super) {
     Application.prototype.getConstrainedValuesFromTypes = function (str) {
         var valuesAsString = str.type.types.filter(function (type) { return type.value; }).map(function (type) { return type.value; }).join(',');
         return valuesAsString ? [valuesAsString] : [];
-    };
-    Application.prototype.generateMiscAttributes = function (str) {
-        var otherMiscAttributes = {};
-        if (str.defaultValue) {
-            var required = str.defaultValue.match(/required\s*:\s([a-zA-Z]+)\s*/);
-            if (required) {
-                otherMiscAttributes['required'] = required[1];
-            }
-            var defaultOptionValue = str.defaultValue.match(/defaultValue\s*:\s([a-zA-Z0-9()'"]+)\s*/);
-            if (defaultOptionValue) {
-                defaultOptionValue[1] = defaultOptionValue[1].replace('l(', '');
-                defaultOptionValue[1] = defaultOptionValue[1].replace(')', '');
-                defaultOptionValue[1] = defaultOptionValue[1].replace(')', '');
-                defaultOptionValue[1] = defaultOptionValue[1].replace(/'/g, '');
-                otherMiscAttributes['defaultValue'] = defaultOptionValue[1];
-            }
-        }
-        return otherMiscAttributes;
     };
     Application.prototype.expandInputFiles = function (inputFiles) {
         var files = [];

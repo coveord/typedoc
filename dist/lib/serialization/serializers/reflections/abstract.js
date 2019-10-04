@@ -38,6 +38,7 @@ var ReflectionSerializer = (function (_super) {
             kind: reflection.kind,
             kindString: reflection.kindString,
             notSupportedIn: reflection.notSupportedIn,
+            coveoComponentOptionAttributes: reflection.coveoComponentOptionAttributes,
             examples: reflection.examples,
             flags: {}
         });

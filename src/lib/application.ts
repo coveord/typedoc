@@ -24,6 +24,7 @@ import { Logger, ConsoleLogger, CallbackLogger, PluginHost, writeFile } from './
 import { AbstractComponent, ChildableComponent, Component, Option } from './utils/component';
 import { Options, OptionsReadMode, OptionsReadResult } from './utils/options/index';
 import { ParameterType } from './utils/options/declaration';
+import { CoveoCustomTag } from "./coveo/coveoCustom";
 
 /**
  * The default TypeDoc main application class.
@@ -277,7 +278,13 @@ export class Application extends ChildableComponent<Application, AbstractCompone
                     let type = '';
 
                     let constrainedValues = this.generateConstrainedValues(json);
-                    let miscAttributes = this.generateMiscAttributes(json);
+                    let miscAttributes = {};
+                    if (json.coveoComponentOptionAttributes) {
+                        for (let key in json.coveoComponentOptionAttributes) {
+                            const miscAttribute = json.coveoComponentOptionAttributes[key] as CoveoCustomTag;
+                            miscAttributes[key] = miscAttribute.rawValue;
+                        }
+                    }
                     if (json.type && json.type.name) {
                         type = json.type.name;
                     }
@@ -344,25 +351,6 @@ export class Application extends ChildableComponent<Application, AbstractCompone
     private getConstrainedValuesFromTypes(str: any) {
         const valuesAsString = str.type.types.filter(type => type.value).map(type => type.value).join(',');
         return valuesAsString ? [valuesAsString] : [];
-    }
-
-    private generateMiscAttributes(str: any) {
-        var otherMiscAttributes = {};
-        if (str.defaultValue) {
-            var required = str.defaultValue.match(/required\s*:\s([a-zA-Z]+)\s*/);
-            if (required) {
-                otherMiscAttributes['required'] = required[1];
-            }
-            var defaultOptionValue = str.defaultValue.match(/defaultValue\s*:\s([a-zA-Z0-9()'"]+)\s*/);
-            if (defaultOptionValue) {
-                defaultOptionValue[1] = defaultOptionValue[1].replace('l(', '');
-                defaultOptionValue[1] = defaultOptionValue[1].replace(')', '');
-                defaultOptionValue[1] = defaultOptionValue[1].replace(')', '');
-                defaultOptionValue[1] = defaultOptionValue[1].replace(/'/g, '');
-                otherMiscAttributes['defaultValue'] = defaultOptionValue[1];
-            }
-        }
-        return otherMiscAttributes;
     }
 
     /**

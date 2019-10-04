@@ -2,6 +2,7 @@ import { SourceReference } from '../sources/file';
 import { Type } from '../types/index';
 import { Comment } from '../comments/comment';
 import { TypeParameterReflection } from './type-parameter';
+import { IParsedCoveoBuildOptionArgs, CoveoCustomTag } from '../../coveo/coveoCustom';
 export declare function resetReflectionID(): void;
 export declare enum ReflectionKind {
     Global = 0,
@@ -115,6 +116,9 @@ export declare abstract class Reflection {
     markupExample: string;
     notSupportedIn: string[];
     examples: string[];
+    coveoComponentOptionAttributes: IParsedCoveoBuildOptionArgs;
+    coveoAdditionalAttributes: CoveoCustomTag[];
+    defaultValue?: string;
     private _alias;
     private _aliases;
     constructor(parent?: Reflection, name?: string, kind?: ReflectionKind);
