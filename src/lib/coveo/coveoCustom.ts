@@ -46,7 +46,7 @@ export class CoveoCustom {
     if (depend) {
         parsedBuildOptionArgs.depend = new CoveoCustomTag(
           "Only effective when",
-          (rawValue, result) => {return `[\`${rawValue}\`]{@link ${result.parent.parent.name}.options.${rawValue}} is set to \`true\``;},
+          (rawValue, result) => {return `[\`${rawValue}\`]{@link ${result.parent.parent.name}.options.${rawValue}} is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy)`;},
           null,
           depend[1].replace(/(['"])([a-zA-Z]+)(['"])/, '$2'));
     }
