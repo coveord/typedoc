@@ -23,7 +23,7 @@ var CoveoCustom = (function () {
         }
         var depend = buildOptionArgs.match(/depend\s*:\s('[a-zA-Z]+'|"[a-zA-Z]+")\s*/);
         if (depend) {
-            parsedBuildOptionArgs.depend = new CoveoCustomTag("Only effective when", function (rawValue, result) { return "[`" + rawValue + "`]{@link " + result.parent.parent.name + ".options." + rawValue + "} is set to `true`"; }, null, depend[1].replace(/(['"])([a-zA-Z]+)(['"])/, '$2'));
+            parsedBuildOptionArgs.depend = new CoveoCustomTag("Only effective when", function (rawValue, result) { return "[`" + rawValue + "`]{@link " + result.parent.parent.name + ".options." + rawValue + "} is [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy)"; }, null, depend[1].replace(/(['"])([a-zA-Z]+)(['"])/, '$2'));
         }
         var min = buildOptionArgs.match(/min\s*:\s(\d+(\.\d+)?)\s*/);
         if (min) {

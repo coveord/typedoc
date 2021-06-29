@@ -62,7 +62,7 @@ var Renderer = (function (_super) {
             return false;
         }
         page.template = page.template || this.theme.resources.templates.getResource(page.templateName).getTemplate();
-        page.contents = page.template(page);
+        page.contents = page.template(page, { allowProtoMethodsByDefault: true, allowProtoPropertiesByDefault: true });
         this.trigger(events_1.PageEvent.END, page);
         if (page.isDefaultPrevented) {
             return false;

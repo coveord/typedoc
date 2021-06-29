@@ -1,4 +1,3 @@
-/// <reference types="handlebars" />
 import { Event } from '../utils/events';
 import { ProjectReflection } from '../models/reflections/project';
 import { UrlMapping } from './models/UrlMapping';
